@@ -74,6 +74,8 @@ type
     fNextOrderLineNo: integer;
     fCreateTime: TCreateTime;
     fModTime: TModTime;
+  public
+      procedure AddOrderLine(pmcOrderLine: TOrderLine);
   published
     property OrderNo: RawUTF8 read fOrderNo write fOrderNo;
     property ClientID: TClientID read fClientID write fClientID;
@@ -90,6 +92,10 @@ function getNewClientID(const pmcName: RawUTF8): RawUTF8;
 function getMeasureOfQty(const pmcQty: TQty): RawUTF8;
 
 implementation
+uses
+  mormot.core.variants
+  , mormot.core.json
+;
 
 function getNewClientID(const pmcName: RawUTF8): RawUTF8;
 begin
@@ -113,6 +119,13 @@ begin
     weight:
       result := 'kg';
   end;
+end;
+
+{ TOrmOSOrder }
+
+procedure TOrmOSOrder.AddOrderLine(pmcOrderLine: TOrderLine);
+begin
+  TDocVariantData(fOrderLines).AddItem(_JsonFast(RecordSaveJson(pmcOrderLine, TypeInfo(TOrderLine))));
 end;
 
 initialization

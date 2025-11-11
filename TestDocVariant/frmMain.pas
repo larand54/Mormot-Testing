@@ -17,20 +17,23 @@ uses
 ;
 
 type
+  TMember = packed record
+    Name: RawUTF8;
+    Age: integer;
+  end;
+
   TOrmFamily = class(TOrm)
     private
       fFamilyName: RawUTF8;
       fMembers: Variant;
+    public
+      procedure AddMember(member: TMember);
     published
       property FamilyName: RawUTF8 read fFamilyName write fFamilyName;
       property Members: variant read fMembers write fMembers;
   end;
   TFamilyArray = array of TOrmFamily;
 
-  TMember = packed record
-    Name: RawUTF8;
-    Age: integer;
-  end;
 
   TFamClient = class(TRestClientDB)
   end;
@@ -41,6 +44,7 @@ type
     ListBox1: TListBox;
     ListBox2: TListBox;
     ListBox3: TListBox;
+    btnNewTest: TButton;
     procedure FormCreate(Sender: TObject);
     procedure Button1Click(Sender: TObject);
     procedure Button2Click(Sender: TObject);
@@ -70,7 +74,7 @@ var
   client: TFamClient;
 begin
   Model := CreateOSModel;
-  Client := TFamClient.Create(Model, nil, ChangeFileExt(Executable.ProgramFileName,'.db'), TRestServerDB, false, '');
+  Client := TFamClient.Create(Model, nil, ChangeFileExt(Executable.ProgramFileName,'.db3'), TRestServerDB, false, '');
   Client.Server.Server.CreateMissingTables;
   result := Client;
 end;
@@ -142,19 +146,23 @@ begin
   fam1.fMembers := '[{"name":"Alice","age":30}]';
   addFamily(fam1);
 
-  mbr11.Name := 'Tommy'; mbr.Age := 45;
-  addMember(fam1, mbr11);
-  mbr12.Name := 'Linda'; mbr.Age := 43;
-  addMember(fam1, mbr12);
+  mbr11.Name := 'Tommy'; mbr11.Age := 45;
+//  addMember(fam1, mbr11);
+  mbr12.Name := 'Linda'; mbr12.Age := 43;
+//  addMember(fam1, mbr12);
+  fam1.AddMember(mbr11);
+  fam1.AddMember(mbr12);
 
   fam2 := TOrmFamily.Create;
   fam2.FamilyName := 'Svenson';
   addFamily(fam2);
 
-  mbr21.Name := 'Erik'; mbr.Age := 25;
-  addMember(fam2, mbr21);
-  mbr22.Name := 'Lena'; mbr.Age := 23;
-  addMember(fam2, mbr22);
+  mbr21.Name := 'Erik'; mbr21.Age := 25;
+//  addMember(fam2, mbr21);
+  mbr22.Name := 'Lena'; mbr22.Age := 23;
+  fam2.AddMember(mbr21);
+  fam2.AddMember(mbr22);
+ // addMember(fam2, mbr22);
 
   fam1.Free;
   fam2.Free;
@@ -181,6 +189,13 @@ procedure TForm2.FormCreate(Sender: TObject);
 begin
   model := CreateOSModel;
   server := InitServer;
+end;
+
+{ TOrmFamily }
+
+procedure TOrmFamily.AddMember(member: TMember);
+begin
+  TDocVariantData(fMembers).AddItem(_JsonFast(RecordSaveJson(member, TypeInfo(TMember))));
 end;
 
 initialization

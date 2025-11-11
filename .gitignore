@@ -91,3 +91,5 @@ backup/
 
 # Claude Code local settings
 .claude/
+
+auto_tests/

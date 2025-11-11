@@ -55,4 +55,12 @@ object Form2: TForm2
     ItemHeight = 15
     TabOrder = 4
   end
+  object btnNewTest: TButton
+    Left = 288
+    Top = 40
+    Width = 75
+    Height = 25
+    Caption = 'btnNewTest'
+    TabOrder = 5
+  end
 end

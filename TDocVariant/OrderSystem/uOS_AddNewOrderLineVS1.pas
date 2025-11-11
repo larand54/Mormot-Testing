@@ -26,11 +26,13 @@ type
     ListBox3: TListBox;
     ListBox2: TListBox;
     ListBox1: TListBox;
+    btnAddNewOrderLine_Quick: TBitBtn;
     procedure btnAddNewOrderLineClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure Button1Click(Sender: TObject);
     procedure cbOrderChange(Sender: TObject);
+    procedure btnAddNewOrderLine_QuickClick(Sender: TObject);
   private
     { Private declarations }
     OS_Server: TOS_Client;
@@ -88,6 +90,22 @@ begin
   SelectedOrder.NextOrderLineNo := SelectedOrder.NextOrderLineNo + 1;
   if not UpdateOrder(OS_Server, selectedOrder) then
     showMessage('*** ERROR ***');
+end;
+
+procedure TfrmAddNewOrderLineVS1.btnAddNewOrderLine_QuickClick(Sender: TObject);
+var
+  Obj: TOrderLine;            // Packed record to hold data for an orderline
+
+begin
+  Obj.Product := edProduct.Text;
+  Obj.QtyType := TQty(cbQtyType.ItemIndex);
+  Obj.Qty := StrToFloat(edQty.Text);
+  Obj.Measure := getMeasureOfQty(obj.QtyType);
+  Obj.OlNo := SelectedOrder.NextOrderLineNo;
+  selectedOrder.AddOrderLine(Obj);
+  if not UpdateOrder(OS_Server, selectedOrder) then
+    showMessage('*** ERROR ***');
+
 end;
 
 procedure TfrmAddNewOrderLineVS1.Button1Click(Sender: TObject);

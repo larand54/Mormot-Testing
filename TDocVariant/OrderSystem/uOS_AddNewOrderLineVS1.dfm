@@ -119,4 +119,15 @@ object frmAddNewOrderLineVS1: TfrmAddNewOrderLineVS1
     ItemHeight = 15
     TabOrder = 8
   end
+  object btnAddNewOrderLine_Quick: TBitBtn
+    Left = 421
+    Top = 82
+    Width = 123
+    Height = 25
+    Caption = 'Add orderLine'
+    Kind = bkOK
+    NumGlyphs = 2
+    TabOrder = 9
+    OnClick = btnAddNewOrderLine_QuickClick
+  end
 end
