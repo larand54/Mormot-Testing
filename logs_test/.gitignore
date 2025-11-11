@@ -1,0 +1,4 @@
+# Unix binary
+logs_test
+*.log
+castle-engine-output/

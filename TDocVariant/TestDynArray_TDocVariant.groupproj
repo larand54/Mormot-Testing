@@ -1,0 +1,84 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{E133CB7B-79CE-4DD0-B7B9-9CDD426B5BA8}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="Test_TDocVariant.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\TDynArray\DynArray.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="E:\mORMot2\ex\ThirdPartyDemos\martin-doyle\01-StandAloneORM\src\Project01.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OrderSystem\OrderSystemOS.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\TestDocVariant\TestDocVariant.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="Test_TDocVariant">
+        <MSBuild Projects="Test_TDocVariant.dproj"/>
+    </Target>
+    <Target Name="Test_TDocVariant:Clean">
+        <MSBuild Projects="Test_TDocVariant.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Test_TDocVariant:Make">
+        <MSBuild Projects="Test_TDocVariant.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="DynArray">
+        <MSBuild Projects="..\TDynArray\DynArray.dproj"/>
+    </Target>
+    <Target Name="DynArray:Clean">
+        <MSBuild Projects="..\TDynArray\DynArray.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="DynArray:Make">
+        <MSBuild Projects="..\TDynArray\DynArray.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Project01">
+        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\martin-doyle\01-StandAloneORM\src\Project01.dproj"/>
+    </Target>
+    <Target Name="Project01:Clean">
+        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\martin-doyle\01-StandAloneORM\src\Project01.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project01:Make">
+        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\martin-doyle\01-StandAloneORM\src\Project01.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OrderSystemOS">
+        <MSBuild Projects="OrderSystem\OrderSystemOS.dproj"/>
+    </Target>
+    <Target Name="OrderSystemOS:Clean">
+        <MSBuild Projects="OrderSystem\OrderSystemOS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OrderSystemOS:Make">
+        <MSBuild Projects="OrderSystem\OrderSystemOS.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestDocVariant">
+        <MSBuild Projects="..\TestDocVariant\TestDocVariant.dproj"/>
+    </Target>
+    <Target Name="TestDocVariant:Clean">
+        <MSBuild Projects="..\TestDocVariant\TestDocVariant.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestDocVariant:Make">
+        <MSBuild Projects="..\TestDocVariant\TestDocVariant.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="Test_TDocVariant;DynArray;Project01;OrderSystemOS;TestDocVariant"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="Test_TDocVariant:Clean;DynArray:Clean;Project01:Clean;OrderSystemOS:Clean;TestDocVariant:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="Test_TDocVariant:Make;DynArray:Make;Project01:Make;OrderSystemOS:Make;TestDocVariant:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
