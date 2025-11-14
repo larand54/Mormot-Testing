@@ -1,25 +1,21 @@
 unit uOS_Server;
-{$I mormot.defines.inc}
 
 interface
 
+{$I mormot.defines.inc}
 
 uses
-  {$I mormot.uses.inc}
-
   System.SysUtils
   , mormot.rest.sqlite3
   , mormot.core.text
   , mormot.db.raw.sqlite3.static
   , mormot.core.os
   , mormot.orm.core
-  , mormot.core.base // TID
-  , uOS_Data
-;
+  ,  mormot.core.base // TID
+  , uOS_Data;
 
 type
   TOS_Client = class(TRestClientDB)
-    destructor destroy; override;
   end;
 
 function InitServer: TOS_Client;
@@ -69,13 +65,6 @@ var
 begin
   ID := client.orm.Add(pmcProduct, true);
   result := ID > 0;
-end;
-
-{ TOS_Client }
-
-destructor TOS_Client.destroy;
-begin
-  inherited;
 end;
 
 end.

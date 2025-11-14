@@ -57,12 +57,4 @@ object Form1: TForm1
     TabOrder = 4
     OnClick = Button1Click
   end
-  object btnAddOrderLine_Simple: TButton
-    Left = 56
-    Top = 161
-    Width = 105
-    Height = 25
-    Caption = 'Add OrderLine'
-    TabOrder = 5
-  end
 end

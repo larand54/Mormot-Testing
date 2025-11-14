@@ -14,7 +14,6 @@ type
     btnAddProduct: TButton;
     btnAddOrder: TButton;
     Button1: TButton;
-    btnAddOrderLine_Simple: TButton;
     procedure btnAddClientClick(Sender: TObject);
     procedure btnAddProductClick(Sender: TObject);
     procedure btnAddOrderClick(Sender: TObject);

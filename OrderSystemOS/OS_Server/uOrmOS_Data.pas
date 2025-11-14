@@ -1,36 +1,35 @@
-unit uOS_Data;
+unit uOrmOS_Data;
 
+{$I mormot.defines.inc}
 interface
-
 uses
-  System.SysUtils, mormot.core.base, mormot.orm.base // Required by "AS_UNIQUE"
-    , mormot.orm.core;
+  {$I mormot.uses.inc}
+  System.SysUtils
+  , mormot.core.base
+  , mormot.orm.base // Required by "AS_UNIQUE"
+  , mormot.orm.core
+  , mormot.core.variants
+  , mormot.core.json
+  , uOS_Data
+;
 
 type
+  {$I mormot.uses.inc}
 
-  TQty = (pcs, length, volume, weight);
-
-  TQuantity = packed record
-    Qty: TQty;
-    measure: RawUTF8;
-  end;
-
-  TClientID = RawUTF8;
-
-  TOrmClient = class(TOrm)
+  TOrmCustomer = class(TOrm)
   private
     fName: RawUTF8;
-    fClientID: TClientID;
+    fCustomerID: TCustomerID;
     fCreateTime: TCreateTime;
     fModTime: TModTime;
   published
     property Name: RawUTF8 read fName write fName;
-    property ClientID: RawUTF8 read fClientID write fClientID stored AS_UNIQUE;
+    property CustomerID: RawUTF8 read fCustomerID write fCustomerID stored AS_UNIQUE;
     property CreateTime: TCreateTime read fCreateTime write fCreateTime;
     property ModTime: TModTime read fModTime write fModTime;
   end;
 
-  TClientArray = array of TOrmClient;
+  TCustomerArray = array of TOrmCustomer;
 
   TOrmProduct = class(TOrm)
   private
@@ -49,27 +48,10 @@ type
     property ModTime: TModTime read fModTime write fModTime;
   end;
 
-  TOrderLine = packed record
-    OLNo: integer;
-    Product: RawUTF8;
-    Qty: double;
-    QtyType: TQty;
-    measure: RawUTF8;
-  end;
-
-  TObjOrderLine = class
-  public
-    OLNo: integer;
-    Product: RawUTF8;
-    Qty: double;
-    QtyType: TQty;
-    measure: RawUTF8;
-  end;
-
   TOrmOSOrder = class(TOrm)
   private
     fOrderNo: RawUTF8;
-    fClientID: TClientID;
+    fCustomerID: TCustomerID;
     fOrderLines: variant;
     fNextOrderLineNo: integer;
     fCreateTime: TCreateTime;
@@ -78,7 +60,7 @@ type
       procedure AddOrderLine(pmcOrderLine: TOrderLine);
   published
     property OrderNo: RawUTF8 read fOrderNo write fOrderNo;
-    property ClientID: TClientID read fClientID write fClientID;
+    property CustomerID: TCustomerID read fCustomerID write fCustomerID;
     property OrderLines: variant read fOrderLines write fOrderLines;
     property NextOrderLineNo: integer read fNextOrderLineNo write fNextOrderLineNo;
     property CreateTime: TCreateTime read fCreateTime write fCreateTime;
@@ -88,53 +70,24 @@ type
   TOrderArray = array of TOrmOSOrder;
 
 function CreateOSModel: TOrmModel;
-function getNewClientID(const pmcName: RawUTF8): RawUTF8;
-function getMeasureOfQty(const pmcQty: TQty): RawUTF8;
 
 implementation
-uses
-  mormot.core.variants
-  , mormot.core.json
-;
-
-function getNewClientID(const pmcName: RawUTF8): RawUTF8;
-begin
-  result := pmcName + IntToStr(Random(1000));
-end;
 
 function CreateOSModel: TOrmModel;
 begin
-  result := TOrmModel.Create([TOrmClient, TOrmProduct, TOrmOSOrder]);
-end;
-
-function getMeasureOfQty(const pmcQty: TQty): RawUTF8;
-begin
-  case pmcQty of
-    pcs:
-      result := 'styck';
-    length:
-      result := 'm';
-    volume:
-      result := 'm3';
-    weight:
-      result := 'kg';
-  end;
+  result := TOrmModel.Create([TOrmCustomer, TOrmProduct, TOrmOSOrder]);
 end;
 
 { TOrmOSOrder }
 
 procedure TOrmOSOrder.AddOrderLine(pmcOrderLine: TOrderLine);
-var
- index: Integer;
 begin
-  index := -1;
   TDocVariantData(fOrderLines).AddItem(_JsonFast(RecordSaveJson(pmcOrderLine, TypeInfo(TOrderLine))));
-//  TDocVariantData(fOrderLines).AddItemRtti(@pmcOrderLine,TypeInfo(TOrderLine));
 end;
+
 
 initialization
 
-TJSONSerializer.RegisterObjArrayForJSON([TypeInfo(TClientArray), TOrmClient,
+TJSONSerializer.RegisterObjArrayForJSON([TypeInfo(TCustomerArray), TOrmCustomer,
   TypeInfo(TOrderArray), TOrmOSOrder]);
-
 end.

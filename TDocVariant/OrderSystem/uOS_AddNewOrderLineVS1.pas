@@ -22,7 +22,6 @@ type
     Label2: TLabel;
     cbOrder: TComboBox;
     Label3: TLabel;
-    Button1: TButton;
     ListBox3: TListBox;
     ListBox2: TListBox;
     ListBox1: TListBox;
@@ -30,7 +29,6 @@ type
     procedure btnAddNewOrderLineClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
-    procedure Button1Click(Sender: TObject);
     procedure cbOrderChange(Sender: TObject);
     procedure btnAddNewOrderLine_QuickClick(Sender: TObject);
   private
@@ -95,7 +93,6 @@ end;
 procedure TfrmAddNewOrderLineVS1.btnAddNewOrderLine_QuickClick(Sender: TObject);
 var
   Obj: TOrderLine;            // Packed record to hold data for an orderline
-
 begin
   Obj.Product := edProduct.Text;
   Obj.QtyType := TQty(cbQtyType.ItemIndex);
@@ -103,37 +100,18 @@ begin
   Obj.Measure := getMeasureOfQty(obj.QtyType);
   Obj.OlNo := SelectedOrder.NextOrderLineNo;
   selectedOrder.AddOrderLine(Obj);
+  SelectedOrder.NextOrderLineNo := SelectedOrder.NextOrderLineNo + 1;
   if not UpdateOrder(OS_Server, selectedOrder) then
-    showMessage('*** ERROR ***');
-
+    showMessage('*** ERROR ***')
+  else begin
+  end;
 end;
 
-procedure TfrmAddNewOrderLineVS1.Button1Click(Sender: TObject);
-var
-  JsonString: RawUTF8;
-  DocVariant: TDocVariant;
-  v: variant;
-  doc: TDocVariantData;
-begin
-  TDocVariant.New(v);
-//  JsonString := '[{"id":1, "name":"Alice"}, {"id":2, "name":"Bob"}]';
-  // Your string containing the array of records
-  v := VariantLoadJson(JsonString);
-  // Now DocVariant contains the array of records as a TDocVariant
-  // JsonString := '{"name":"Alice","age":30}';
-  v := TDocVariant.NewJson(JsonString);
-  doc.InitJson(JsonString);
-  doc.AddOrUpdateObject('{"id":3, "name":"Tommy"}');
-  JsonString := doc.ToJson;
-  // doc.AddFrom()
-  DocVariant.NewArray(v, []);
-end;
 
 procedure TfrmAddNewOrderLineVS1.cbOrderChange(Sender: TObject);
 begin
   selectedOrder := TOrmOSOrder.Create;
   OS_Server.server.Retrieve(TOrmOSOrder(cbOrder.Items.Objects[cbOrder.itemIndex]).ID, selectedOrder);
-
 end;
 
 procedure TfrmAddNewOrderLineVS1.FormClose(Sender: TObject;
@@ -145,6 +123,7 @@ begin
   begin
     cbOrder.Items.Objects[i].free;
   end;
+  SelectedOrder.free;
   OS_Server.Model.free;
   OS_Server.free;
 end;

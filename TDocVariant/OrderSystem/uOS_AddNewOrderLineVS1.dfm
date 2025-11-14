@@ -86,22 +86,13 @@ object frmAddNewOrderLineVS1: TfrmAddNewOrderLineVS1
     Text = 'cbOrder'
     OnChange = cbOrderChange
   end
-  object Button1: TButton
-    Left = 416
-    Top = 8
-    Width = 75
-    Height = 25
-    Caption = 'Button1'
-    TabOrder = 5
-    OnClick = Button1Click
-  end
   object ListBox3: TListBox
     Left = 360
     Top = 113
     Width = 121
     Height = 193
     ItemHeight = 15
-    TabOrder = 6
+    TabOrder = 5
   end
   object ListBox2: TListBox
     Left = 216
@@ -109,7 +100,7 @@ object frmAddNewOrderLineVS1: TfrmAddNewOrderLineVS1
     Width = 121
     Height = 193
     ItemHeight = 15
-    TabOrder = 7
+    TabOrder = 6
   end
   object ListBox1: TListBox
     Left = 64
@@ -117,7 +108,7 @@ object frmAddNewOrderLineVS1: TfrmAddNewOrderLineVS1
     Width = 121
     Height = 193
     ItemHeight = 15
-    TabOrder = 8
+    TabOrder = 7
   end
   object btnAddNewOrderLine_Quick: TBitBtn
     Left = 421
@@ -127,7 +118,7 @@ object frmAddNewOrderLineVS1: TfrmAddNewOrderLineVS1
     Caption = 'Add orderLine'
     Kind = bkOK
     NumGlyphs = 2
-    TabOrder = 9
+    TabOrder = 8
     OnClick = btnAddNewOrderLine_QuickClick
   end
 end

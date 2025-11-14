@@ -48,7 +48,6 @@ begin
   newOrder.orderNo := edOrderNo.text;
   newOrder.ClientID := getNewClientID(OSClient.Name);
   newOrder.nextorderLineNo := 1;
-//  newOrder.OrderLines := '[]';
   addOrder(OS_Server, newOrder);
 
   if newOrder <> nil then

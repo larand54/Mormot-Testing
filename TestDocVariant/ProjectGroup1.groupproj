@@ -1,0 +1,84 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{D1CB45AF-994A-4910-AA28-83138500BABF}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="TestDocVariant.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\TDocVariant\Test_TDocVariant.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\TDocVariant\OrderSystem\OrderSystemOS.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\OrderSystemOS\OS_Server\OrderSystemOS_Server.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="TestDocVariant">
+        <MSBuild Projects="TestDocVariant.dproj"/>
+    </Target>
+    <Target Name="TestDocVariant:Clean">
+        <MSBuild Projects="TestDocVariant.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestDocVariant:Make">
+        <MSBuild Projects="TestDocVariant.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Test_TDocVariant">
+        <MSBuild Projects="..\TDocVariant\Test_TDocVariant.dproj"/>
+    </Target>
+    <Target Name="Test_TDocVariant:Clean">
+        <MSBuild Projects="..\TDocVariant\Test_TDocVariant.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Test_TDocVariant:Make">
+        <MSBuild Projects="..\TDocVariant\Test_TDocVariant.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OrderSystemOS">
+        <MSBuild Projects="..\TDocVariant\OrderSystem\OrderSystemOS.dproj"/>
+    </Target>
+    <Target Name="OrderSystemOS:Clean">
+        <MSBuild Projects="..\TDocVariant\OrderSystem\OrderSystemOS.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OrderSystemOS:Make">
+        <MSBuild Projects="..\TDocVariant\OrderSystem\OrderSystemOS.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server">
+        <MSBuild Projects="..\OrderSystemOS\OS_Server\OrderSystemOS_Server.dproj"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Clean">
+        <MSBuild Projects="..\OrderSystemOS\OS_Server\OrderSystemOS_Server.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Make">
+        <MSBuild Projects="..\OrderSystemOS\OS_Server\OrderSystemOS_Server.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestRestServer">
+        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj"/>
+    </Target>
+    <Target Name="TestRestServer:Clean">
+        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestRestServer:Make">
+        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="TestDocVariant;Test_TDocVariant;OrderSystemOS;OrderSystemOS_Server;TestRestServer"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="TestDocVariant:Clean;Test_TDocVariant:Clean;OrderSystemOS:Clean;OrderSystemOS_Server:Clean;TestRestServer:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="TestDocVariant:Make;Test_TDocVariant:Make;OrderSystemOS:Make;OrderSystemOS_Server:Make;TestRestServer:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
