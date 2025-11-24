@@ -93,3 +93,4 @@ backup/
 .claude/
 
 auto_tests/
+*.log

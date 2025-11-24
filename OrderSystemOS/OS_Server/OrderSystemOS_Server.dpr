@@ -7,7 +7,7 @@ program OrderSystemOS_Server;
 {$ENDIF MSWINDOWS}
 
 uses
-{$I mormot.uses.inc}
+  {$I mormot.uses.inc}
   System.SysUtils,
   mormot.core.base,
   mormot.core.data,
@@ -19,8 +19,7 @@ uses
   mormot.core.unicode,
   mormot.rest.core,
   mormot.rest.http.server,
-  uOS_RestServer in 'uOS_RestServer.pas',
-  ICustomServices in 'ICustomServices.pas',
+  IOrderSystemInterfaces in 'IOrderSystemInterfaces.pas',
   uOS_Data in 'uOS_Data.pas',
   uOrmOS_Data in 'uOrmOS_Data.pas',
   uOS_ServiceServer in 'uOS_ServiceServer.pas',
@@ -36,15 +35,17 @@ type
     FCustomerConfigFile: TFileName;
   private
     FHttpServer: TRestHttpServer;
-    FRestServer: TFileRestServer;
+    FRestServer: TOSRestServer;
   public
     constructor Create(const pmcCustomerConfigFileName: TFileName; const pmcDataFolder: TFileName); reintroduce;
     destructor Destroy; override;
     function RunServer(const pmcPort: RawUtf8): Boolean;
   end;
+
+constructor TTestServerMain.create(const pmcCustomerConfigFileName: TFileName; const pmcDataFolder: TFileName);
 begin
   inherited Create;
-  FRestServer := TFileRestServer.Create(pmcDataFolder);
+  FRestServer := TOSRestServer.Create;
   FCustomerConfigFile := pmcCustomerConfigFileName;
   if ExtractFilePath(FCustomerConfigFile) = '' then
     FCustomerConfigFile := MakePath([Executable.ProgramFilePath, FCustomerConfigFile]);
@@ -62,10 +63,9 @@ end;
 function TTestServerMain.RunServer(const pmcPort: RawUtf8): Boolean;
 begin
   Result := False;
-  if (FHttpServer = Nil)
-    and FRestServer.InitAuthForAllCustomers(FCustomerConfigFile) then
+  if (FHttpServer = Nil) then
   begin
-    FHttpServer := TRestHttpServer.Create(pmcPort, [FRestServer], '+' {DomainName}, useHttpSocket {or useHttpAsync});
+    FHttpServer := TRestHttpServer.Create(pmcPort, [FRestServer], 'OS', useHttpSocket {or useHttpAsync});
     FHttpServer.AccessControlAllowOrigin := '*';
     Result := True;
   end;
@@ -73,7 +73,6 @@ end;
 
 
 //==============================================================================
-constructor TTestServerMain.Create(const pmcCustomerConfigFileName: TFileName; const pmcDataFolder: TFileName);
 var
   MainServer: TTestServerMain;
 

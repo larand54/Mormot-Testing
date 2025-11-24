@@ -1,4 +1,4 @@
-unit uOS_ServiceIntefaces;
+unit uOS_ServiceInterfaces;
 
 {$I mormot.defines.inc}
 
@@ -14,10 +14,10 @@ uses
 const
   ROOT_NAME_FILE = 'OrderSystem';
 type
-  IDocument = interface(IInvokable)
+  IOrder = interface(IInvokable)
   ['{691473CE-1695-440A-A212-F334C466974A}']
     function AddOrder(const pmcOrder: TOrder): Boolean;
-    function AddClient(const pmcClient: TClient): Boolean;
+    function AddCustomer(const pmcCustomer: TCustomer): Boolean;
     procedure AddProdukt(out pmcProduct: TProduct);
     procedure AddOrderLine(out pmcOL: TOrderLine);
   end;

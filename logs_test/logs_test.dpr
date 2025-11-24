@@ -4,14 +4,18 @@
   - https://blog.synopse.info/?post/2025/10/29/EKON-29-Slides
   - https://www.slideshare.net/slideshow/comprehensive-logging-with-mormot-2-on-delphi-and-fpc/283972772#1
 }
+{$IFDEF MSWINDOWS}
+  {$APPTYPE CONSOLE}
+{$ENDIF MSWINDOWS}
 
-{$I mormot.defines.inc}
 
 uses
   // {$if defined(FPC) and defined(UNIX)} CThreads, {$endif} // mormot.uses will do it
-  {$I mormot.uses.inc}
   SysUtils,
-  mormot.core.log, mormot.core.base;
+  mormot.core.log
+  , mormot.core.base
+  , mormot.core.rtti
+;
 
 type
   TMyClass = class
@@ -34,7 +38,7 @@ begin
     if Assigned(log) then
       log.Log(sllTrace, 'SomeMethod log inside');
 
-    raise Exception.Create('test error');
+//    raise Exception.Create('test error');
   except
     on E: Exception do
       TSynLog.Add.Log(sllError, 'SomeMethod raised %', [E], self);
@@ -62,4 +66,5 @@ begin
   try
     my.SomeMethod;
   finally FreeAndNil(my) end;
+  readln;
 end.

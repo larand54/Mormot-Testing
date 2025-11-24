@@ -9,6 +9,7 @@ uses
   , mormot.orm.core
   , mormot.core.base
   , mormot.core.os
+  , mormot.core.rtti
   , mormot.core.json
   , mormot.core.variants
   , mormot.rest.sqlite3
@@ -195,7 +196,8 @@ end;
 
 procedure TOrmFamily.AddMember(member: TMember);
 begin
-  TDocVariantData(fMembers).AddItem(_JsonFast(RecordSaveJson(member, TypeInfo(TMember))));
+//  TDocVariantData(fMembers).AddItem(_JsonFast(RecordSaveJson(member, TypeInfo(TMember))));
+  TDocVariantData(fMembers).AddItemRtti(@member, Rtti.RegisterType(TypeInfo(TMember)));
 end;
 
 initialization

@@ -1,0 +1,96 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{132B3A8E-2CA8-48C5-B72D-BEABF25D164D}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="OrderSystemOS_Server.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\OS_Client\OS_Client.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestClient.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="C:\Users\larand\Documents\Embarcadero\Studio\Projects\Övningar\Test_Form_Call\FormCall.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\logs_test\logs_test.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="OrderSystemOS_Server">
+        <MSBuild Projects="OrderSystemOS_Server.dproj"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Clean">
+        <MSBuild Projects="OrderSystemOS_Server.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Make">
+        <MSBuild Projects="OrderSystemOS_Server.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OS_Client">
+        <MSBuild Projects="..\OS_Client\OS_Client.dproj"/>
+    </Target>
+    <Target Name="OS_Client:Clean">
+        <MSBuild Projects="..\OS_Client\OS_Client.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OS_Client:Make">
+        <MSBuild Projects="..\OS_Client\OS_Client.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestRestClient">
+        <MSBuild Projects="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestClient.dproj"/>
+    </Target>
+    <Target Name="TestRestClient:Clean">
+        <MSBuild Projects="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestClient.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestRestClient:Make">
+        <MSBuild Projects="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestClient.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="TestRestServer">
+        <MSBuild Projects="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj"/>
+    </Target>
+    <Target Name="TestRestServer:Clean">
+        <MSBuild Projects="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="TestRestServer:Make">
+        <MSBuild Projects="..\..\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="FormCall">
+        <MSBuild Projects="C:\Users\larand\Documents\Embarcadero\Studio\Projects\Övningar\Test_Form_Call\FormCall.dproj"/>
+    </Target>
+    <Target Name="FormCall:Clean">
+        <MSBuild Projects="C:\Users\larand\Documents\Embarcadero\Studio\Projects\Övningar\Test_Form_Call\FormCall.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="FormCall:Make">
+        <MSBuild Projects="C:\Users\larand\Documents\Embarcadero\Studio\Projects\Övningar\Test_Form_Call\FormCall.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="logs_test">
+        <MSBuild Projects="..\..\logs_test\logs_test.dproj"/>
+    </Target>
+    <Target Name="logs_test:Clean">
+        <MSBuild Projects="..\..\logs_test\logs_test.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="logs_test:Make">
+        <MSBuild Projects="..\..\logs_test\logs_test.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="OrderSystemOS_Server;OS_Client;TestRestClient;TestRestServer;FormCall;logs_test"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="OrderSystemOS_Server:Clean;OS_Client:Clean;TestRestClient:Clean;TestRestServer:Clean;FormCall:Clean;logs_test:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="OrderSystemOS_Server:Make;OS_Client:Make;TestRestClient:Make;TestRestServer:Make;FormCall:Make;logs_test:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

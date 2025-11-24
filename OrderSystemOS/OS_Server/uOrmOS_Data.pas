@@ -29,7 +29,7 @@ type
     property ModTime: TModTime read fModTime write fModTime;
   end;
 
-  TCustomerArray = array of TOrmCustomer;
+  TOrmCustomerArray = array of TOrmCustomer;
 
   TOrmProduct = class(TOrm)
   private
@@ -47,6 +47,7 @@ type
     property CreateTime: TCreateTime read fCreateTime write fCreateTime;
     property ModTime: TModTime read fModTime write fModTime;
   end;
+  TOrmProductArray = array of TOrmProduct;
 
   TOrmOSOrder = class(TOrm)
   private
@@ -67,12 +68,14 @@ type
     property ModTime: TModTime read fModTime write fModTime;
   end;
 
-  TOrderArray = array of TOrmOSOrder;
+  TOrmOrderArray = array of TOrmOSOrder;
 
 function CreateOSModel: TOrmModel;
 
 implementation
-
+uses
+  mormot.core.rtti // Rtti used in "AddOrderLine"
+;
 function CreateOSModel: TOrmModel;
 begin
   result := TOrmModel.Create([TOrmCustomer, TOrmProduct, TOrmOSOrder]);
@@ -82,12 +85,13 @@ end;
 
 procedure TOrmOSOrder.AddOrderLine(pmcOrderLine: TOrderLine);
 begin
-  TDocVariantData(fOrderLines).AddItem(_JsonFast(RecordSaveJson(pmcOrderLine, TypeInfo(TOrderLine))));
+//  TDocVariantData(fOrderLines).AddItem(_JsonFast(RecordSaveJson(pmcOrderLine, TypeInfo(TOrderLine))));  Both lines works!
+  TDocVariantData(fOrderLines).AddItemRtti(@pmcOrderLine, Rtti.RegisterType(TypeInfo(TOrderLine)));
 end;
 
 
 initialization
 
-TJSONSerializer.RegisterObjArrayForJSON([TypeInfo(TCustomerArray), TOrmCustomer,
-  TypeInfo(TOrderArray), TOrmOSOrder]);
+TJSONSerializer.RegisterObjArrayForJSON([TypeInfo(TOrmCustomerArray), TOrmCustomer,
+  TypeInfo(TOrmOrderArray), TOrmOSOrder, TypeInfo(TOrmProductArray), TOrmProduct]);
 end.

@@ -15,7 +15,7 @@
         <Projects Include="..\OrderSystemOS\OS_Server\OrderSystemOS_Server.dproj">
             <Dependencies/>
         </Projects>
-        <Projects Include="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj">
+        <Projects Include="..\..\morm2_EX\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj">
             <Dependencies/>
         </Projects>
     </ItemGroup>
@@ -63,13 +63,13 @@
         <MSBuild Projects="..\OrderSystemOS\OS_Server\OrderSystemOS_Server.dproj" Targets="Make"/>
     </Target>
     <Target Name="TestRestServer">
-        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj"/>
+        <MSBuild Projects="..\..\morm2_EX\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj"/>
     </Target>
     <Target Name="TestRestServer:Clean">
-        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Clean"/>
+        <MSBuild Projects="..\..\morm2_EX\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Clean"/>
     </Target>
     <Target Name="TestRestServer:Make">
-        <MSBuild Projects="E:\mORMot2\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Make"/>
+        <MSBuild Projects="..\..\morm2_EX\ex\ThirdPartyDemos\tbo\04-HttpServer-InterfaceServices\TestRestServer.dproj" Targets="Make"/>
     </Target>
     <Target Name="Build">
         <CallTarget Targets="TestDocVariant;Test_TDocVariant;OrderSystemOS;OrderSystemOS_Server;TestRestServer"/>

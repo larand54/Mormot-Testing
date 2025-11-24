@@ -13,6 +13,7 @@ uses
 type
 
   TCustomerID = RawUTF8;
+  TOrderNo = RawUTF8;
 
   TQty = (pcs, length, volume, weight);
 
@@ -21,17 +22,29 @@ type
     measure: RawUTF8;
   end;
 
-  TCustomer = packed record
-    fName: RawUTF8;
-    fCustomerID: TCustomerID;
+  TCustomer = class
+  private
+   fName: RawUTF8;
+   fCustomerID: TCustomerID;
+  published
+    property Name: RawUTF8 read fName write fName;
+    property CustomerID: TCustomerID read fCustomerID write fCustomerID;
   end;
+  TCustomerArray = array of TCustomer;
 
-  TProduct = packed record
+  TProduct = class
+  private
     fName: RawUTF8;
     fPrice: Currency;
     fCurrency: RawUTF8;
     fData: variant;
+  published
+    property Name: RawUTF8 read fName write fName;
+    property Price: Currency read fPrice write fPrice;
+    property Currcy: RawUTF8 read fCurrency write fCurrency;
+    property Data: variant read fData write fData;
   end;
+  TProductArray = array of TProduct;
 
   TOrderLine = packed record
     OLNo: integer;
@@ -41,14 +54,21 @@ type
     measure: RawUTF8;
   end;
 
-  TOrder = packed record
+  TOrder = class
+  private
     fOrderNo: RawUTF8;
-    fClientID: TCustomerID;
+    fCustomerID: TCustomerID;
     fOrderLines: variant;
     fNextOrderLineNo: integer;
+  published
+    property OrderNo: RawUTF8 read fOrderNo write fOrderNo;
+    property CustomerID: TCustomerID read fCustomerID write fCustomerID;
+    property OrderLines: variant read fOrderLines write fOrderLines;
+    property NextOrderLineNo: integer read fNextOrderLineNo write fNextOrderLineNo;
   end;
+  TOrderArray = array of TOrder;
 
-function getNewCustomerID(const pmcName: RawUTF8): RawUTF8;
+function getNewCustomerID(const pmcName: RawUTF8): TCustomerID;
 function getMeasureOfQty(const pmcQty: TQty): RawUTF8;
 
 implementation

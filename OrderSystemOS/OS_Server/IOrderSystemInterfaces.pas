@@ -1,4 +1,4 @@
-unit ICustomServices;
+unit IOrderSystemInterfaces;
 
 {$I mormot.defines.inc}
 interface
@@ -13,13 +13,16 @@ uses
   , uOS_Data                         // Packed records and some help functions
 ;
 type
-  ICustomService = interface(IInvokable)
+  IOrderSystem = interface(IInvokable)
   ['{2EF6038C-FCD1-4B5C-B0B7-75C5EBD15B79}']
-    function GetConnection(out pmoConnection: TSqlDBConnection): Boolean;
     function AddCustomer(const pmcCustomer: TCustomer): Boolean;
     function AddProduct(const pmcProduct: TProduct): Boolean;
-    function AddOrder(const pmcOrdemer: TOrder): Boolean;
-    function AddOrderLine(const pmcOrdeLine: TOrderLine): Boolean;
+    function AddOrder(const pmcOrder: TOrder): Boolean;
+    function AddOrderLine(var pmvOrderLine: TOrderLine; const pmcOrderNo: TOrderNo): Boolean;
+    function RetrieveOrders(out pmoOrders: TOrderArray): boolean;
+    function RetrieveCustomers(out pmoCustomers: TCustomerArray): boolean;
+    function RetrieveProducts(out pmoProducts: TProductArray): boolean;
+//    function SaveOrder(const pmcOrder: TOrder): boolean;
   end;
 
 implementation
@@ -27,5 +30,5 @@ implementation
 initialization
 
   TInterfaceFactory.RegisterInterfaces([
-    TypeInfo(ICustomService)]);
+    TypeInfo(IOrderSystem)]);
 end.

@@ -21,6 +21,8 @@ uses
   ,  mormot.rest.core
   ,  mormot.rest.server
   ,  mormot.rest.memserver
+  , mormot.rest.sqlite3
+  , mormot.db.raw.sqlite3.static
 ;
 
 type
@@ -29,7 +31,7 @@ type
     procedure ComputeFileName; override;
   end;
 
-  TOSRestServer = class(TRestServerFullMemory)
+  TOSRestServer = class(TRestServerDB)
   public
     constructor Create; reintroduce;
   end;
@@ -38,8 +40,9 @@ type
 
 implementation
 uses
-  uCustomServices
-  , ICustomServices
+  OSModelServices
+  , IOrderSystemInterfaces
+  , uOrmOS_Data
 ;
 { TRestServerLog }
 
@@ -56,16 +59,19 @@ constructor TOSRestServer.Create;
 var
   Model: TOrmModel;
 begin
-  inherited Create(Model, 'OrderSystem');
+  model := createOSModel;
+//  inherited Create(Model, 'OrderSystem');
+  inherited Create(Model, ChangeFileExt(Executable.ProgramFileName,'.db3'), false);
 
   // Logging class initialization
   SetLogClass(TRestServerLog);
   LogFamily.Level := LOG_VERBOSE;
   LogFamily.PerThreadLog := ptIdentifiedInOneFile;
   LogFamily.HighResolutionTimestamp := True;
+  LogFamily.EchoToConsole := LOG_VERBOSE; // log all events to the console
 
   // Service registration
-  ServiceDefine(TCustomService, [ICustomService], sicShared);
+  ServiceDefine(TOrderSystemService, [IOrderSystem], sicShared);
 
   Server.CreateMissingTables(0, [itoNoAutoCreateUsers]);  // You should always create your own users
 end;
