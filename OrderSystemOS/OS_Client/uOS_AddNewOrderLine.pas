@@ -7,10 +7,17 @@ uses
   System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Buttons
   , mormot.core.base
+  , mormot.orm.base
   , mormot.net.client
   , mormot.rest.http.client
   , uClient_OrderService
   , IOrderSystemInterfaces, Vcl.Grids
+  , mormot.ui.grid.orm
+  , uOS_Data
+  , mormot.core.json
+  , mormot.core.variants
+  , mormot.core.data
+  , mormot.core.text
 ;
 
 type
@@ -26,8 +33,10 @@ type
     cbProduct: TComboBox;
     strngrdOrderLines: TStringGrid;
     btnClose: TBitBtn;
+    btnTest1: TButton;
     procedure btnAddNewOrderLineClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
+    procedure btnTest1Click(Sender: TObject);
   private
     { Private declarations }
     fOSService: TOrderSystemService;
@@ -35,6 +44,8 @@ type
     fOS_Client: TRestHttpClient;
     function fillProductCombo(const pmcCbo: TComboBox): integer;  // Returns number of loaded products
     function fillOrderCombo(const pmcCbo: TComboBox): integer;  // Returns number of loaded orders
+    function fillGrid(const pmcGrid: TStringGrid; const pmcLineData: RawUTF8): integer;
+    function test1: boolean;
   public
     { Public declarations }
     constructor Create(Sender: TComponent; const pmcServer: TOrderSystemService); reintroduce;
@@ -46,7 +57,16 @@ var
 implementation
 
 uses
-  uOS_Data, TypInfo, mormot.core.json;
+  TypInfo
+//  ,  mormot.core.rtti // Contains RecordLoad functionality
+
+;
+type
+  TMyRecord = packed record
+    Name: RawUTF8;
+    Year: Integer;
+  end;
+  TMyRecordDynArray = array of TMyRecord;
 
 {$R *.dfm}
 
@@ -67,8 +87,39 @@ begin
   orderNo := ord.OrderNo;
   if not fService.AddOrderLine(ol, OrderNo) then
     showMessage('*** ERROR ***');
-  if assigned(Ord) then
-    freeandnil(Ord);
+end;
+
+function TfrmAddNewOrderLine.fillGrid(const pmcGrid: TStringGrid; const pmcLineData: RawUTF8): integer;
+var
+  col, row: PtrInt;
+  Line: TDocVariant;
+  s: string;
+  OL: TOrderLineArray;
+begin
+  if (pmcLineData = '') or
+     (pmcGrid = nil) then
+    exit; // avoid GPF
+  {$ifdef FPC}
+  pmcGrid.BeginUpdate;
+  try
+  {$endif FPC}
+    Line := TDocVariant(pmcLineData);
+//    if DynArrayLoadJson(pmcLineData, Pointer(line.A['OL'].ToJson), TypeInfo(TOrderLineArray) <> Nil then
+(*
+    Line.NewArray(pmcLineData, [dvoIsArray])
+    pmcGrid.ColCount := Source.FieldCount;
+    pmcGrid.RowCount := Source.RowCount + 1;
+    for row := 0 to Source.RowCount + 1 do
+      for col := 0 to Source.FieldCount-1 do
+      begin
+        Source.ExpandAsString(row, col, Model, s); // will do all the magic
+        pmcGrid.Cells[col, row] := s;
+      end;
+  {$ifdef FPC}
+  finally
+    pmcGrid.EndUpdate;
+  end;
+  {$endif FPC}    *)
 end;
 
 function TfrmAddNewOrderLine.fillOrderCombo(const pmcCbo: TComboBox): integer;
@@ -112,6 +163,78 @@ var
 begin
 end;
 
+function TfrmAddNewOrderLine.test1: boolean;
+(*
+  uses
+    mormot.core.variants,
+    mormot.core.rtti; // Contains RecordLoad functionality
+
+*)
+const
+  __TTextMyRecordArray = 'Name RawUTF8 Year cardinal';
+var
+  V: variant;
+  RecordsArray: TMyRecordDynArray;
+  DocData: TDocVariantData;
+  length, I: integer;
+  JsonStr: RawUTF8;
+  item: TDocVariantData;
+  MyRec: TMyRecord;
+begin
+
+  TJsonSerializer.RegisterCustomJSONSerializerFromText(TypeInfo(TMyRecordDynArray), __TTextMyRecordArray);
+  JsonStr := '[{"Name":"John","Year":1982},{"Name":"Jane","Year":1985}]';
+  RecordLoad(MyRec, @JsonStr[1], TypeInfo(TMyRecordDynArray));
+  // Assume V is populated with an array of records data, e.g. from a JSON string:
+  V := _Json('[{"Name":"John","Year":1982},{"Name":"Jane","Year":1985}]');
+  DynArrayLoadJson(RecordsArray,V,TypeInfo(TMyRecordDynArray));      // Works!
+  for i := 0 to high(RecordsArray) do
+        Caption := Caption + RecordsArray[i].name;
+    // Access the underlying TDocVariantData
+    DocData := TDocVariantData(V);
+    length := DocData.Count;
+ // RecordLoad(MyRec, @(DocData.Items), TypeInfo(TMyRecordDynArray));
+
+    // Use RecordLoad to populate the dynamic array
+    // The second parameter specifies the type info of the dynamic array type
+//    RecordLoad(DocData, @RecordsArray, TypeInfo(TMyRecordDynArray), @length );
+//    RecordsArray.LoadFrom
+    // Now RecordsArray contains your data
+    // ... use RecordsArray ...
+(*
+*)
+
+(*
+  // 1. Save the TDocVariantData content to a JSON string
+  JsonStr := VariantSaveJSON(V);
+
+  // 2. Load the JSON string into the dynamic array using RTTI
+  RecordLoad(jsonstr, @RecordsArray, TypeInfo(TMyRecordDynArray), @length );
+
+
+
+  if TDocVariantData(V).IsArray then
+  begin
+    SetLength(RecordsArray, TDocVariantData(V).Count);
+    for I := 0 to TDocVariantData(V).Count - 1 do
+    begin
+//      length:= TDocVariantData(V).GetItemAsInt(I);
+//      if Assigned(Item) and Item.IsObject then
+      begin
+        RecordsArray[I].Name := Item.GetValueOrNull('Name').AsString;
+        RecordsArray[I].Year := Item.GetValueOrNull('Year').AsInteger;
+      end;
+    end;
+  end;
+*)
+//  caption := intToStr(high(RecordsArray));
+ end;
+
+procedure TfrmAddNewOrderLine.btnTest1Click(Sender: TObject);
+begin
+  test1;
+end;
+
 constructor TfrmAddNewOrderLine.Create(Sender: TComponent; const pmcServer: TOrderSystemService);
 var
   Qty: TQty;
@@ -128,5 +251,6 @@ begin
     cbQtyType.Items.Add(GetEnumName(TypeInfo(TQty), integer(Qty)));
   cbQtyType.ItemIndex := 0;
 end;
+initialization
 
 end.

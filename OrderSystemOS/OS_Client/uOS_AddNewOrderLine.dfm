@@ -100,4 +100,13 @@ object frmAddNewOrderLine: TfrmAddNewOrderLine
     NumGlyphs = 2
     TabOrder = 6
   end
+  object btnTest1: TButton
+    Left = 80
+    Top = 360
+    Width = 75
+    Height = 25
+    Caption = 'btnTest1'
+    TabOrder = 7
+    OnClick = btnTest1Click
+  end
 end

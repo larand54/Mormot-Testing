@@ -53,6 +53,7 @@ type
     QtyType: TQty;
     measure: RawUTF8;
   end;
+  TOrderLineArray = array of TOrderLine;
 
   TOrder = class
   private

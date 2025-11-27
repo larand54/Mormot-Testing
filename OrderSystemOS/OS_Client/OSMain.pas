@@ -89,7 +89,7 @@ var
   frmNewOrderLine: TfrmAddNewOrderLine;
 begin
   frmNewOrderLine := TfrmAddNewOrderLine.Create(self, OS_Services);
-  frmNewOrderLine.ShowModal;
+  frmNewOrderLine.Show;
 end;
 
 procedure TForm1.btnAddProductClick(Sender: TObject);
