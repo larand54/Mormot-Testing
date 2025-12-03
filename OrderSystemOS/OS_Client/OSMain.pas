@@ -44,6 +44,7 @@ type
     procedure FormCreate(Sender: TObject);
     procedure btnAddCustomerClick(Sender: TObject);
     procedure btnUpdateListOfOrdersClick(Sender: TObject);
+    procedure FormClose(Sender: TObject; var Action: TCloseAction);
   private
                 { Private declarations }
     fOS_Service: TOrderSystemService;
@@ -111,8 +112,15 @@ begin
   OS_Services.Client.Resolve(IOrderSystem, Service);
   Service.RetrieveOrders(Orders);
   for i := 0 to High(Orders) do begin
-     lstOrders.AddItem(Orders[i].OrderNo + ' : ' + Orders[i].CustomerID, Orders[i]);
+     lstOrders.AddItem(Orders[i].OrderNo + ' : ' + Orders[i].CustomerID, nil);
   end;
+  for i := 0 to High(Orders) do
+    Orders[i].free;
+end;
+
+procedure TForm1.FormClose(Sender: TObject; var Action: TCloseAction);
+begin
+  fOS_Service.free;
 end;
 
 procedure TForm1.FormCreate(Sender: TObject);

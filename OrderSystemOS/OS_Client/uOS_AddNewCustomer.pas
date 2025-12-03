@@ -47,6 +47,7 @@ begin
   newCustomer.Name := edCustomerName.text;
   newCustomer.CustomerID := getNewCustomerID(newCustomer.Name);
   service.AddCustomer(newCustomer);
+  newCustomer.Free;
 end;
 
 

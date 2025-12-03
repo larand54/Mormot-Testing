@@ -10,7 +10,6 @@ object frmAddCustomer: TfrmAddCustomer
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
-  PixelsPerInch = 96
   TextHeight = 15
   object edCustomerName: TEdit
     Left = 24

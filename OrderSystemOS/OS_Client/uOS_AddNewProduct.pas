@@ -50,6 +50,7 @@ begin
   newProduct.Price := nmbrPrice.Value;
   newProduct.Currcy := nmbrPrice.CurrencyString;
   service.AddProduct(newProduct);
+  newProduct.Free;
 end;
 
 constructor TfrmAddProduct.Create(Sender: TComponent;

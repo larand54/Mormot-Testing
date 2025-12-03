@@ -24,7 +24,6 @@ type
   private
     { Private declarations }
     fOSService: TOrderSystemService;
-    fService: IOrderSystem;
     fOS_Client: TRestHttpClient;
   public
     { Public declarations }
@@ -46,12 +45,15 @@ uses
 procedure TfrmAddOrder.btnAddOrderClick(Sender: TObject);
 var
   newOrder: TOrder;
+  service: IOrderSystem;
 begin
   newOrder := TOrder.create;
   newOrder.orderNo := edOrderNo.text;
   newOrder.CustomerID := getNewCustomerID(cbCustomer.Text);
   newOrder.nextorderLineNo := 0;  // Will be set in the server
-  fService.addOrder(newOrder);
+  if not fOSService.Client.Resolve(IOrderSystem, service) then Exit; //=>
+  service.addOrder(newOrder);
+  newOrder.Free;
 end;
 
 procedure TfrmAddOrder.FormClose(Sender: TObject; var Action: TCloseAction);
@@ -71,11 +73,8 @@ begin
   inherited create(owner);
   fOSService := pmcServer;
   cbCustomer.Items.Clear;
-  fOS_Client := fOSService.Client;
   if not fOSService.Client.Resolve(IOrderSystem, service) then Exit; //=>
-  if not fOS_Client.Resolve(IOrderSystem, fService) then
-    Exit;
-  fService.RetrieveCustomers(customerArray);
+  service.RetrieveCustomers(customerArray);
   for i := 0 to high(customerArray) do
   begin
     customer := customerArray[i];
@@ -87,7 +86,6 @@ begin
   begin
     customerArray[i].Free;
   end;
-
 end;
 
 end.

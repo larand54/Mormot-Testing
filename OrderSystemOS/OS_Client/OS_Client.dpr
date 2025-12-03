@@ -9,12 +9,14 @@ uses
   uOS_Data in '..\OS_Server\uOS_Data.pas',
   IOrderSystemInterfaces in '..\OS_Server\IOrderSystemInterfaces.pas',
   uClient_OrderService in 'uClient_OrderService.pas',
-  uOrmOS_Data in '..\OS_Server\uOrmOS_Data.pas',
   uOS_AddNewProduct in 'uOS_AddNewProduct.pas' {frmAddProduct};
 
 {$R *.res}
 
 begin
+{$IFDEF DEBUG}
+  ReportMemoryLeaksOnShutdown := True;
+{$ENDIF}
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   Application.CreateForm(TForm1, Form1);

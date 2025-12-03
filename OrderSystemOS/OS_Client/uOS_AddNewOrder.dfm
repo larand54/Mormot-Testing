@@ -11,7 +11,6 @@ object frmAddOrder: TfrmAddOrder
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnClose = FormClose
-  PixelsPerInch = 96
   TextHeight = 15
   object Label1: TLabel
     Left = 26

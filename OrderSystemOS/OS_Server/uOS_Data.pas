@@ -1,4 +1,8 @@
 unit uOS_Data;
+//
+// Contains datastructures used on the client side and some common types used in the order system.
+// Also some special functions.
+//
 {$I mormot.defines.inc}
 
 interface
@@ -64,13 +68,16 @@ type
   published
     property OrderNo: RawUTF8 read fOrderNo write fOrderNo;
     property CustomerID: TCustomerID read fCustomerID write fCustomerID;
-    property OrderLines: variant read fOrderLines write fOrderLines;
+    property OrderLines: variant read fOrderLines write fOrderLines;                     // Json formatted array of orderlines.
     property NextOrderLineNo: integer read fNextOrderLineNo write fNextOrderLineNo;
   end;
   TOrderArray = array of TOrder;
 
 function getNewCustomerID(const pmcName: RawUTF8): TCustomerID;
 function getMeasureOfQty(const pmcQty: TQty): RawUTF8;
+
+const
+  __TOrderLineArray = 'OLNo integer Product RawUTF8 Qty double QtyType TQty measure RawUTF8';  // Used for serializing TOrderLineArray from the json formated orderlines property.
 
 implementation
 

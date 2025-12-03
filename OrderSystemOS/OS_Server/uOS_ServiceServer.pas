@@ -60,7 +60,6 @@ var
   Model: TOrmModel;
 begin
   model := createOSModel;
-//  inherited Create(Model, 'OrderSystem');
   inherited Create(Model, ChangeFileExt(Executable.ProgramFileName,'.db3'), false);
 
   // Logging class initialization
@@ -70,7 +69,7 @@ begin
   LogFamily.HighResolutionTimestamp := True;
   LogFamily.EchoToConsole := LOG_VERBOSE; // log all events to the console
 
-  // Service registration
+  // Service registration  - Services is defined in unit OSModelServices. In this case we only have one service(IOrderSystem) defined.
   ServiceDefine(TOrderSystemService, [IOrderSystem], sicShared);
 
   Server.CreateMissingTables(0, [itoNoAutoCreateUsers]);  // You should always create your own users

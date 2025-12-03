@@ -11,7 +11,6 @@ object frmAddNewOrderLine: TfrmAddNewOrderLine
   Font.Name = 'Segoe UI'
   Font.Style = []
   OnClose = FormClose
-  PixelsPerInch = 96
   TextHeight = 15
   object Label1: TLabel
     Left = 240
@@ -59,6 +58,7 @@ object frmAddNewOrderLine: TfrmAddNewOrderLine
     Height = 23
     TabOrder = 1
     Text = 'cbOrder'
+    OnChange = cbOrderChange
   end
   object edQty: TEdit
     Left = 240

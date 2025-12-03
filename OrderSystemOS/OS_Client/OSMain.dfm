@@ -10,8 +10,8 @@ object Form1: TForm1
   Font.Height = -12
   Font.Name = 'Segoe UI'
   Font.Style = []
+  OnClose = FormClose
   OnCreate = FormCreate
-  PixelsPerInch = 96
   TextHeight = 15
   object lbl1: TLabel
     Left = 240
@@ -63,8 +63,8 @@ object Form1: TForm1
     OnClick = btnAddOrderClick
   end
   object lstOrders: TListBox
-    Left = 240
-    Top = 40
+    Left = 247
+    Top = 43
     Width = 369
     Height = 337
     ItemHeight = 15

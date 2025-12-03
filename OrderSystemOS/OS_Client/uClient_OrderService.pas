@@ -26,8 +26,7 @@ type
 
 implementation
 uses
-  uOrmOS_Data
-  , IOrderSystemInterfaces
+  IOrderSystemInterfaces
   , mormot.soa.core
 ;
 { TOrderService }
@@ -50,11 +49,11 @@ end;
 function TOrderSystemService.InitializeServices: Boolean;
 begin
   Result := False;
-  if FClient.SessionID > 0 then
+  if Client.SessionID > 0 then
   try
     // The check before registering the service with ServiceDefine() is only necessary because the
     // user can be changed and the initialization is executed again. This is normally not the case.
-    Result := (FClient.ServiceContainer.Info(IOrderSystem) <> Nil) or FClient.ServiceDefine([IOrderSystem], sicShared);
+    Result := (Client.ServiceContainer.Info(IOrderSystem) <> Nil) or Client.ServiceDefine([IOrderSystem], sicShared);
   except
   end;
 end;

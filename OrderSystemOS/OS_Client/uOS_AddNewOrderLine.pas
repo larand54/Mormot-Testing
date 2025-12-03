@@ -37,6 +37,7 @@ type
     procedure btnAddNewOrderLineClick(Sender: TObject);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
     procedure btnTest1Click(Sender: TObject);
+    procedure cbOrderChange(Sender: TObject);
   private
     { Private declarations }
     fOSService: TOrderSystemService;
@@ -58,6 +59,7 @@ implementation
 
 uses
   TypInfo
+  , Rtti
 //  ,  mormot.core.rtti // Contains RecordLoad functionality
 
 ;
@@ -78,6 +80,7 @@ var
   ols: RawUTF8;
   ord: TOrder;
   OrderNo: TOrderNo;
+  i: integer;
 begin
   ol.Product := cbProduct.Text;
   ol.QtyType := TQty(cbQtyType.ItemIndex);
@@ -86,16 +89,58 @@ begin
   ord := TOrder(cbOrder.Items.Objects[cbOrder.ItemIndex]);
   orderNo := ord.OrderNo;
   if not fService.AddOrderLine(ol, OrderNo) then
-    showMessage('*** ERROR ***');
+    showMessage('*** ERROR ***')
+  else begin
+    i := cbOrder.ItemIndex;
+    fillOrderCombo(cbOrder);
+    fillGrid(strngrdOrderLines, TOrder(cbOrder.items.Objects[i]).OrderLines);//
+  end;
 end;
 
 function TfrmAddNewOrderLine.fillGrid(const pmcGrid: TStringGrid; const pmcLineData: RawUTF8): integer;
 var
   col, row: PtrInt;
-  Line: TDocVariant;
+  col_width: integer;
+  str_width: integer;
+  Line: Variant;
   s: string;
-  OL: TOrderLineArray;
+  OLarr: TOrderLineArray;
+  Rec: TMyRecord;
+  fldNames: array of RawUTF8;
+  fldTypes: array of tTypeKind;
+
+  function getTi: integer;
+  var
+    ctx: TRttiContext;
+    t: TRttiType;
+    field: TRttiField;
+    i: integer;
+  begin
+    try
+      i := 0;
+      ctx := TRttiContext.Create;
+      setLength(fldTypes, 100);  // High enough column count
+      setLength(fldNames, 100);
+
+      for field in ctx.GetType(TypeInfo(TOrderLine)).GetFields do
+      begin
+        t := field.FieldType;
+        // writeln(Format('Field : %s : Type : %s', [field.Name, field.FieldType.Name]));
+        fldNames[i] := field.Name;
+        fldTypes[i] := field.FieldType.TypeKind;
+        inc(i);
+      end;
+    except
+      on E: Exception do
+        showMessage(E.ClassName + ': ' + E.Message);
+    end;
+    setLength(fldTypes, i);      // Set actual column count
+    setLength(fldNames, i);
+    result := i; // Number of columns
+  end;
+
 begin
+  TJsonSerializer.RegisterCustomJSONSerializerFromText(TypeInfo(TOrderLineArray), __TOrderLineArray);
   if (pmcLineData = '') or
      (pmcGrid = nil) then
     exit; // avoid GPF
@@ -103,23 +148,53 @@ begin
   pmcGrid.BeginUpdate;
   try
   {$endif FPC}
-    Line := TDocVariant(pmcLineData);
-//    if DynArrayLoadJson(pmcLineData, Pointer(line.A['OL'].ToJson), TypeInfo(TOrderLineArray) <> Nil then
-(*
-    Line.NewArray(pmcLineData, [dvoIsArray])
-    pmcGrid.ColCount := Source.FieldCount;
-    pmcGrid.RowCount := Source.RowCount + 1;
-    for row := 0 to Source.RowCount + 1 do
-      for col := 0 to Source.FieldCount-1 do
+    getTi;
+    for col := 0  to high(fldNames) do begin
+      s := fldNames[col];
+      pmcGrid.Cells[col, 0] := s;
+    end;
+    Line := _Json(pmcLineData);
+    if VarisNull(Line) then exit;
+
+    if DynArrayLoadJson(OLarr, line, TypeInfo(TOrderLineArray)) then begin
+    pmcGrid.ColCount := high(fldNames)+1;
+    pmcGrid.RowCount := high(OLArr) + 2 ;
+
+    for row := 1 to high(OLarr)+1 do
+      for col := 0 to high(fldNames) do
       begin
-        Source.ExpandAsString(row, col, Model, s); // will do all the magic
+//        line.ExpandAsString(row, col, Model, s); // will do all the magic
+        if fldNames[col] = 'OLNo' then
+          s := intToStr(OLArr[row-1].OLNo)
+        else if fldNames[col] = 'Product' then
+          s := OLArr[row-1].Product
+        else if fldNames[col] = 'Qty' then
+          s := DoubleToStr(OLArr[row-1].Qty)
+        else if fldNames[col] = 'QtyType' then
+          s := intToStr(Ord(OLArr[row-1].QtyType))
+        else if fldNames[col] = 'measure' then
+          s := OLArr[row-1].measure
+        else
+          s := 'UnKnown';
         pmcGrid.Cells[col, row] := s;
       end;
+    end;
+   Str_Width:=0;
+   Col_Width:=0;
+   col := 1; //Product
+   For row := 0 To pmcGrid.RowCount - 1 do
+   begin
+     // get the pixel width of the complete string
+     Col_Width := pmcGrid.Canvas.TextWidth(pmcGrid.Cells[col,row]);     // if its greater, then put it in str_width
+     If col_width>str_width then str_width:=col_width;
+   end;
+   pmcGrid.ColWidths[col] := str_width+10; // +5 for margins. adjust if neccesary
+
   {$ifdef FPC}
   finally
     pmcGrid.EndUpdate;
   end;
-  {$endif FPC}    *)
+  {$endif FPC}
 end;
 
 function TfrmAddNewOrderLine.fillOrderCombo(const pmcCbo: TComboBox): integer;
@@ -129,8 +204,13 @@ var
   OrdNo: RawUTF8;
 begin
   result := -1;
+  // Clear combo from old data
+  for i := 0 to pmcCbo.items.count-1 do
+    pmcCbo.items.objects[i].free;
   pmcCbo.items.clear;
+  // Retrieve all orders
   fService.RetrieveOrders(OrderArray);
+  // Add all orders to combo
   for i := 0 to high(orderArray) do
   begin
     OrdNo := TOrder(orderArray[i]).OrderNo;
@@ -161,6 +241,14 @@ procedure TfrmAddNewOrderLine.FormClose(Sender: TObject;
 var
   i: integer;
 begin
+  // Clear product combo and free all product objects
+  for i := 0 to cbProduct.items.count-1 do
+    cbProduct.items.objects[i].free;
+  // Clear order combo and free all order objects
+  for i := 0 to cbOrder.items.count-1 do
+    cbOrder.items.objects[i].free;
+  // Remove reference to IOrderSystem else the form closing procedure tries to free it which result in an exception.
+  fService := nil;
 end;
 
 function TfrmAddNewOrderLine.test1: boolean;
@@ -193,6 +281,7 @@ begin
     // Access the underlying TDocVariantData
     DocData := TDocVariantData(V);
     length := DocData.Count;
+  fillGrid(strngrdOrderLines, JsonStr);
  // RecordLoad(MyRec, @(DocData.Items), TypeInfo(TMyRecordDynArray));
 
     // Use RecordLoad to populate the dynamic array
@@ -233,6 +322,19 @@ begin
 procedure TfrmAddNewOrderLine.btnTest1Click(Sender: TObject);
 begin
   test1;
+end;
+
+procedure TfrmAddNewOrderLine.cbOrderChange(Sender: TObject);
+var
+  order: TOrder;
+begin
+  order := TOrder(cbOrder.items.Objects[cbOrder.ItemIndex]);
+  if varIsNull(order.OrderLines) then begin
+    strngrdOrderLines.RowCount := 0;
+    exit;
+  end;
+
+  fillGrid(strngrdOrderLines, order.OrderLines);
 end;
 
 constructor TfrmAddNewOrderLine.Create(Sender: TComponent; const pmcServer: TOrderSystemService);

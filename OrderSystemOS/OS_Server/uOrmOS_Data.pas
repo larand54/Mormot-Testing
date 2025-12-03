@@ -1,5 +1,9 @@
 unit uOrmOS_Data;
-
+//
+// Contains ORM-classes used in storage(DB)
+// Definition of arrays for each Ormclass.
+// In the initialization part we register the arrays for there Json-serializers
+//
 {$I mormot.defines.inc}
 interface
 uses
@@ -10,7 +14,7 @@ uses
   , mormot.orm.core
   , mormot.core.variants
   , mormot.core.json
-  , uOS_Data
+  , uOS_Data           // Defines some user types.
 ;
 
 type
@@ -78,20 +82,27 @@ uses
 ;
 function CreateOSModel: TOrmModel;
 begin
-  result := TOrmModel.Create([TOrmCustomer, TOrmProduct, TOrmOSOrder]);
+  result := TOrmModel.Create([TOrmCustomer, TOrmProduct, TOrmOSOrder]);   // Create a model for our tables.
 end;
 
 { TOrmOSOrder }
 
+// Add a new orderline to the order.
+// All orderlines are stored in the same field as an JSON-array "[{Orderline1}, {Orderline2}..{Last orderline}]"
+// The structure of an OrderLine is defined in unit "uOS_Data".
+//
 procedure TOrmOSOrder.AddOrderLine(pmcOrderLine: TOrderLine);
 begin
-//  TDocVariantData(fOrderLines).AddItem(_JsonFast(RecordSaveJson(pmcOrderLine, TypeInfo(TOrderLine))));  Both lines works!
-  TDocVariantData(fOrderLines).AddItemRtti(@pmcOrderLine, Rtti.RegisterType(TypeInfo(TOrderLine)));
+//  TDocVariantData(fOrderLines).AddItem(_JsonFast(RecordSaveJson(pmcOrderLine, TypeInfo(TOrderLine)))); // Both lines works!
+  TDocVariantData(fOrderLines).AddItemRtti(@pmcOrderLine, Rtti.RegisterType(TypeInfo(TOrderLine)));      // But this one is the preferable one.
 end;
 
 
 initialization
-
-TJSONSerializer.RegisterObjArrayForJSON([TypeInfo(TOrmCustomerArray), TOrmCustomer,
-  TypeInfo(TOrmOrderArray), TOrmOSOrder, TypeInfo(TOrmProductArray), TOrmProduct]);
+//
+// Register our arrays for JSON serialization.
+TJSONSerializer.RegisterObjArrayForJSON([
+  TypeInfo(TOrmCustomerArray), TOrmCustomer,
+  TypeInfo(TOrmOrderArray), TOrmOSOrder,
+  TypeInfo(TOrmProductArray), TOrmProduct]);
 end.
