@@ -1,0 +1,72 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{68B8DFD9-6049-45F2-8AC5-33A2FF790008}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="ProjectTestRtti.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OS_Server\OrderSystemOS_Server.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="OS_Client\OS_Client.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\mORMot\SQLite3\Samples\02 - Embedded SQLite3 ORM\Project02.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="ProjectTestRtti">
+        <MSBuild Projects="ProjectTestRtti.dproj"/>
+    </Target>
+    <Target Name="ProjectTestRtti:Clean">
+        <MSBuild Projects="ProjectTestRtti.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectTestRtti:Make">
+        <MSBuild Projects="ProjectTestRtti.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server">
+        <MSBuild Projects="OS_Server\OrderSystemOS_Server.dproj"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Clean">
+        <MSBuild Projects="OS_Server\OrderSystemOS_Server.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Make">
+        <MSBuild Projects="OS_Server\OrderSystemOS_Server.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OS_Client">
+        <MSBuild Projects="OS_Client\OS_Client.dproj"/>
+    </Target>
+    <Target Name="OS_Client:Clean">
+        <MSBuild Projects="OS_Client\OS_Client.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OS_Client:Make">
+        <MSBuild Projects="OS_Client\OS_Client.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Project02">
+        <MSBuild Projects="..\..\..\mORMot\SQLite3\Samples\02 - Embedded SQLite3 ORM\Project02.dproj"/>
+    </Target>
+    <Target Name="Project02:Clean">
+        <MSBuild Projects="..\..\..\mORMot\SQLite3\Samples\02 - Embedded SQLite3 ORM\Project02.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="Project02:Make">
+        <MSBuild Projects="..\..\..\mORMot\SQLite3\Samples\02 - Embedded SQLite3 ORM\Project02.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="ProjectTestRtti;OrderSystemOS_Server;OS_Client;Project02"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="ProjectTestRtti:Clean;OrderSystemOS_Server:Clean;OS_Client:Clean;Project02:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="ProjectTestRtti:Make;OrderSystemOS_Server:Make;OS_Client:Make;Project02:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>

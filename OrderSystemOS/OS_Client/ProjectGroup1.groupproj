@@ -1,0 +1,84 @@
+﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <ProjectGuid>{08EA3597-C533-4480-A6A0-5F19FEF90CC7}</ProjectGuid>
+    </PropertyGroup>
+    <ItemGroup>
+        <Projects Include="OS_Client.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\OS_Server\OrderSystemOS_Server.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\RttiTest\ProjectTestRtti.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\..\Projects\CARMAK\BODA\TT_KONTRAKT\tt_kontrakt.dproj">
+            <Dependencies/>
+        </Projects>
+        <Projects Include="..\..\..\..\Projects\CARMAK\BODA\TT_FAKTURA\tt_Faktura.dproj">
+            <Dependencies/>
+        </Projects>
+    </ItemGroup>
+    <ProjectExtensions>
+        <Borland.Personality>Default.Personality.12</Borland.Personality>
+        <Borland.ProjectType/>
+        <BorlandProject>
+            <Default.Personality/>
+        </BorlandProject>
+    </ProjectExtensions>
+    <Target Name="OS_Client">
+        <MSBuild Projects="OS_Client.dproj"/>
+    </Target>
+    <Target Name="OS_Client:Clean">
+        <MSBuild Projects="OS_Client.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OS_Client:Make">
+        <MSBuild Projects="OS_Client.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server">
+        <MSBuild Projects="..\OS_Server\OrderSystemOS_Server.dproj"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Clean">
+        <MSBuild Projects="..\OS_Server\OrderSystemOS_Server.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="OrderSystemOS_Server:Make">
+        <MSBuild Projects="..\OS_Server\OrderSystemOS_Server.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="ProjectTestRtti">
+        <MSBuild Projects="..\..\RttiTest\ProjectTestRtti.dproj"/>
+    </Target>
+    <Target Name="ProjectTestRtti:Clean">
+        <MSBuild Projects="..\..\RttiTest\ProjectTestRtti.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="ProjectTestRtti:Make">
+        <MSBuild Projects="..\..\RttiTest\ProjectTestRtti.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="tt_kontrakt">
+        <MSBuild Projects="..\..\..\..\Projects\CARMAK\BODA\TT_KONTRAKT\tt_kontrakt.dproj"/>
+    </Target>
+    <Target Name="tt_kontrakt:Clean">
+        <MSBuild Projects="..\..\..\..\Projects\CARMAK\BODA\TT_KONTRAKT\tt_kontrakt.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tt_kontrakt:Make">
+        <MSBuild Projects="..\..\..\..\Projects\CARMAK\BODA\TT_KONTRAKT\tt_kontrakt.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="tt_Faktura">
+        <MSBuild Projects="..\..\..\..\Projects\CARMAK\BODA\TT_FAKTURA\tt_Faktura.dproj"/>
+    </Target>
+    <Target Name="tt_Faktura:Clean">
+        <MSBuild Projects="..\..\..\..\Projects\CARMAK\BODA\TT_FAKTURA\tt_Faktura.dproj" Targets="Clean"/>
+    </Target>
+    <Target Name="tt_Faktura:Make">
+        <MSBuild Projects="..\..\..\..\Projects\CARMAK\BODA\TT_FAKTURA\tt_Faktura.dproj" Targets="Make"/>
+    </Target>
+    <Target Name="Build">
+        <CallTarget Targets="OS_Client;OrderSystemOS_Server;ProjectTestRtti;tt_kontrakt;tt_Faktura"/>
+    </Target>
+    <Target Name="Clean">
+        <CallTarget Targets="OS_Client:Clean;OrderSystemOS_Server:Clean;ProjectTestRtti:Clean;tt_kontrakt:Clean;tt_Faktura:Clean"/>
+    </Target>
+    <Target Name="Make">
+        <CallTarget Targets="OS_Client:Make;OrderSystemOS_Server:Make;ProjectTestRtti:Make;tt_kontrakt:Make;tt_Faktura:Make"/>
+    </Target>
+    <Import Project="$(BDS)\Bin\CodeGear.Group.Targets" Condition="Exists('$(BDS)\Bin\CodeGear.Group.Targets')"/>
+</Project>
