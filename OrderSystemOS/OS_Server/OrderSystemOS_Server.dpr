@@ -20,7 +20,6 @@ uses
   mormot.rest.core,
   mormot.rest.http.server,
   IOrderSystemInterfaces in 'IOrderSystemInterfaces.pas',
-  uOS_Data in 'uOS_Data.pas',
   uOrmOS_Data in 'uOrmOS_Data.pas',
   uOS_ServiceServer in 'uOS_ServiceServer.pas',
   OSModelServices in 'OSModelServices.pas';
